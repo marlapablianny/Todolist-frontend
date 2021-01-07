@@ -1,28 +1,71 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <nav>
+      <div class="nav-wrapper blue darken-1">
+        <a href="#" class="brand-logo center">Tarefas</a>
+      </div>
+    </nav>
+    <div class="container">
+      <form v-on:submit.prevent="add">
+        <label>Tarefa</label>
+        <input type="text" placeholder="Descricao" v-model="descricao_tarefa"/>
+        <button value="salvar">Adicionar</button>
+      </form>
+      <div>
+        <ul>
+          <li
+            v-for="(tarefa, index) in tarefas"
+            v-bind:key="index">
+            {{ tarefa }}
+            <input type="checkbox" v-model="concluida">
+            <button type="submit" value="salvar" v-on:click="remover(index)"></button>
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
-</template>
-
+</template> 
+        
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
+  name: "App",
+  data: function () {
+    return {
+      tarefas: [],
+      id: 0,
+      concluida: 0,
+
+    };
+  },
+  methods: {
+    remover: function (index) {
+      return this.tarefas.splice(index, 1);
+    },
+    add: function(){
+      this.tarefas.push({
+        id: this.id++,
+        descricao: this.descricao_tarefa
+      })
+      this.descricao_tarefa = ''
+    },
+    //concluida: function (index) {
+      //const tarefa = this.tarefas[index];
+
+     // tarefa.concluida = !tarefa.concluida;
+      //this.remove(index);
+      //if (tarefa.concluida) {
+        //this.tarefas.push(tarefa);
+      //} else {
+       // this.tarefas.splice(0, 0, tarefa);
+      //}
+    //},
+    //remove(index) {
+      //this.tarefas.splice(index, 1);
+    //},
+  },
+
+};
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
 </style>
