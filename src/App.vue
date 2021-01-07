@@ -8,17 +8,19 @@
     <div class="container">
       <form v-on:submit.prevent="add">
         <label>Tarefa</label>
-        <input type="text" placeholder="Descricao" v-model="descricao_tarefa"/>
+        <input type="text" placeholder="Descricao" v-model="descricao_tarefa" />
         <button value="salvar">Adicionar</button>
       </form>
       <div>
         <ul>
           <li
             v-for="(tarefa, index) in tarefas"
-            v-bind:key="index">
-            {{ tarefa }}
-            <input type="checkbox" v-model="concluida">
-            <button type="submit" value="salvar" v-on:click="remover(index)"></button>
+            v-bind:key="index"
+            v-bind:class="{ marcado: tarefa.checked }"
+          >
+            {{ tarefa.descricao }}
+            <input type="checkbox" v-on:click="check(index)" v-model="tarefa.checked" />
+            <button value="salvar" v-on:click="remover(index)">Remover</button>
           </li>
         </ul>
       </div>
@@ -31,41 +33,30 @@ export default {
   name: "App",
   data: function () {
     return {
+      descricao_tarefa: "",
       tarefas: [],
-      id: 0,
-      concluida: 0,
-
     };
   },
   methods: {
     remover: function (index) {
       return this.tarefas.splice(index, 1);
     },
-    add: function(){
+    add: function () {
       this.tarefas.push({
-        id: this.id++,
-        descricao: this.descricao_tarefa
-      })
-      this.descricao_tarefa = ''
+        descricao: this.descricao_tarefa,
+        checked: false,
+      });
+      this.descricao_tarefa = "";
     },
-    //concluida: function (index) {
-      //const tarefa = this.tarefas[index];
-
-     // tarefa.concluida = !tarefa.concluida;
-      //this.remove(index);
-      //if (tarefa.concluida) {
-        //this.tarefas.push(tarefa);
-      //} else {
-       // this.tarefas.splice(0, 0, tarefa);
-      //}
-    //},
-    //remove(index) {
-      //this.tarefas.splice(index, 1);
-    //},
+    check: function (index) {
+      this.tarefas[index].checked = !this.tarefas[index].checked;
+    },
   },
-
 };
 </script>
 
 <style>
+.marcado {
+  background: rgb(31, 109, 83);
+}
 </style>
