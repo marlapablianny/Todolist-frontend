@@ -29,6 +29,7 @@
 </template> 
         
 <script>
+import axios from "axios"
 export default {
   name: "App",
   data: function () {
@@ -36,6 +37,11 @@ export default {
       descricao_tarefa: "",
       tarefas: [],
     };
+  },
+  mounted: function(){
+    axios.get('localhost:3000/tarefas').then( function (response){
+      console.log(response);
+    });
   },
   methods: {
     remover: function (index) {
