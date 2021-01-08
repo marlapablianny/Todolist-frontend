@@ -8,7 +8,7 @@
     <div class="container">
       <form v-on:submit.prevent="add">
         <label>Tarefa</label>
-        <input type="text" placeholder="Descricao" v-model="descricao_tarefa" />
+        <input type="text" placeholder="Descricao" v-model="descricao_tarefa">
         <button value="salvar">Adicionar</button>
       </form>
       <div>
@@ -16,8 +16,7 @@
           <li
             v-for="(tarefa, index) in tarefas"
             v-bind:key="index"
-            v-bind:class="{ marcado: tarefa.concluida }"
-          >
+            v-bind:class="{ marcado: tarefa.concluida }">
             {{ tarefa.descricao }}
             <input
               type="checkbox"
@@ -40,22 +39,29 @@ export default {
     return {
       descricao_tarefa: "",
       tarefas: [],
+      
     };
   },
   mounted: async function () {
     const response = await axios.get("http://localhost:3000/tarefas");
     this.tarefas = response.data;
-  },  
+  },
+
   methods: {
-    remover: function (index) {
-      return this.tarefas.splice(index, 1);
+    remover: async function (index) {
+      const id = this.tarefas[index].id;
+      await axios.delete(`http://localhost:3000/tarefas/${id}`);
+      this.listar();
     },  
-    add: function () {
-      this.tarefas.push({
-        descricao: this.descricao_tarefa,
-        checked: false,
-      });
-      this.descricao_tarefa = "";
+    listar: async function () {
+    const response = await axios.get("http://localhost:3000/tarefas");
+    this.tarefas = response.data;
+  },
+    add: async function () {
+      const descricao = this.descricao_tarefa;
+      await axios.post("http://localhost:3000/tarefas",{descricao});
+      this.listar();
+      
     },
     check: function (index) {
       this.tarefas[index].checked = !this.tarefas[index].checked;
