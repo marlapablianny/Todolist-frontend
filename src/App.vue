@@ -16,10 +16,14 @@
           <li
             v-for="(tarefa, index) in tarefas"
             v-bind:key="index"
-            v-bind:class="{ marcado: tarefa.checked }"
+            v-bind:class="{ marcado: tarefa.concluida }"
           >
             {{ tarefa.descricao }}
-            <input type="checkbox" v-on:click="check(index)" v-model="tarefa.checked" />
+            <input
+              type="checkbox"
+              v-on:click="check(index)"
+              v-model="tarefa.concluida"
+            />
             <button value="salvar" v-on:click="remover(index)">Remover</button>
           </li>
         </ul>
@@ -29,7 +33,7 @@
 </template> 
         
 <script>
-import axios from "axios"
+import axios from "axios";
 export default {
   name: "App",
   data: function () {
@@ -38,15 +42,14 @@ export default {
       tarefas: [],
     };
   },
-  mounted: function(){
-    axios.get('localhost:3000/tarefas').then( function (response){
-      console.log(response);
-    });
-  },
+  mounted: async function () {
+    const response = await axios.get("http://localhost:3000/tarefas");
+    this.tarefas = response.data;
+  },  
   methods: {
     remover: function (index) {
       return this.tarefas.splice(index, 1);
-    },
+    },  
     add: function () {
       this.tarefas.push({
         descricao: this.descricao_tarefa,
