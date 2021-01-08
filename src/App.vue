@@ -2,14 +2,14 @@
   <div id="app">
     <nav>
       <div class="nav-wrapper blue darken-1">
-        <a href="#" class="brand-logo center">Tarefas</a>
+        <a href="#" class="center">Todo List</a>
       </div>
     </nav>
     <div class="container">
       <form v-on:submit.prevent="add">
         <label>Tarefa</label>
-        <input type="text" placeholder="Descricao" v-model="descricao_tarefa">
-        <button value="salvar">Adicionar</button>
+        <input type="text" class="tarefa" placeholder="Descricao" v-model="descricao_tarefa">
+        <button value="salvar">+</button>
       </form>
       <div>
         <ul>
@@ -63,8 +63,11 @@ export default {
       this.listar();
       
     },
-    check: function (index) {
-      this.tarefas[index].checked = !this.tarefas[index].checked;
+    check: async function (index) {
+      const id = this.tarefas[index].id;
+      await axios.put(`http://localhost:3000/tarefas/${id}`);
+      this.listar();
+      
     },
   },
 };
@@ -72,6 +75,12 @@ export default {
 
 <style>
 .marcado {
-  background: rgb(31, 109, 83);
+  text-decoration: line-through;
+  color: #ccc;
+}
+.tarefa {
+
+  
+
 }
 </style>
