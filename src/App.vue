@@ -1,38 +1,61 @@
 <template>
   <div id="app">
-    <div class="titulo">
-      Todo-List
-    </div>
-    <div class="container">
-      <section class="tarefas">
-        <form v-on:submit.prevent="add" class="add">
-          <label class="label">Adicione uma Tarefa</label>
-          <input type="text" class="texto" placeholder="ex: Lavar louça" v-model="descricao_tarefa">
-          <button value="salvar" type="submit" class="button is-primary">Salvar</button>
-        </form>
-        <ul class="minhas_tarefas">
-          <div class="t"
-            v-for="(tarefa, index) in tarefas"
-            v-bind:key="index"
-            v-bind:class="{ marcado: tarefa.concluida }">
-            {{ tarefa.descricao }}
-            <input
-              class="concluida"
-              type="checkbox"
-              v-on:click="check(index)"
-              v-model="tarefa.concluida"
-            />
-            <button value="salvar" class="remover" v-on:click="remover(index)">Remover</button>
+    <div class="page-container">
+      <section class="hero"> <!-- Alterado para cor verde -->
+        <div class="hero-body">
+          <div class="container">
+            <h1 class="title">Todolist</h1>
           </div>
-        </ul>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <form @submit.prevent="add" class="box">
+            <div class="field has-addons">
+              <div class="control is-expanded">
+                <input
+                  type="text"
+                  class="input"
+                  placeholder="Adicione uma Tarefa"
+                  v-model="descricao_tarefa"
+                />
+              </div>
+              <div class="control">
+                <button type="submit" class="button is-primary is-outlined">
+                  Adicionar
+                </button>
+              </div>
+            </div>
+          </form>
+          <ul class="minhas_tarefas">
+            <li v-for="(tarefa, index) in tarefas" :key="index" class="box">
+              <div class="columns is-vcentered">
+                <div class="column is-narrow">
+                  <label class="checkbox is-primary" :class="{ 'is-completed': tarefa.concluida }">
+                    <input type="checkbox" @click="check(index)" v-model="tarefa.concluida"  class="custom-checkbox"/>
+                    <span class="checkbox is-primary" :class="{ 'is-visible': tarefa.concluida }"></span>
+                  </label>
+                </div>
+                <div class="column">
+                  <span :class="{ 'is-completed': tarefa.concluida }">{{ tarefa.descricao }}</span>
+                </div>
+                <div class="column is-narrow">
+                  <button class="delete is-danger" @click="remover(index)" style="background-color: #ff3860; color: #fff" >Remover</button>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
       </section>
     </div>
   </div>
-</template> 
-        
+</template>
+
 <script>
-//Usando axios para consumir a api usando promessas
 import axios from "axios";
+import 'bulma/css/bulma.css';
+
 export default {
   name: "App",
   data: function () {
@@ -46,8 +69,7 @@ export default {
   //a função mounted que só deixa todo o codigo rodar após 
   //todos os componentes da API de rederizada;
   mounted: async function () {
-    const response = await axios.get("http://localhost:3000/tarefas");
-    this.tarefas = response.data;
+    this.listar();
   },
   //Metodos usadas no projeto
   //todos são funções assicronas, pois uso de promessas, funções que retornam objetos
@@ -62,14 +84,14 @@ export default {
       const id = this.tarefas[index].id;
       await axios.delete(`http://localhost:3000/tarefas/${id}`);
       this.listar();
-    },  
+    },
     listar: async function () {
-    const response = await axios.get("http://localhost:3000/tarefas");
-    this.tarefas = response.data;
-  },
+      const response = await axios.get("http://localhost:3000/tarefas");
+      this.tarefas = response.data;
+    },
     add: async function () {
       const descricao = this.descricao_tarefa;
-      await axios.post("http://localhost:3000/tarefas",{descricao});
+      await axios.post("http://localhost:3000/tarefas", { descricao });
       this.listar();
       this.descricao_tarefa = "";
 
@@ -87,56 +109,44 @@ export default {
 <style>
 body {
   margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #00d1b2; /* Adicione a cor de fundo verde aqui */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
 }
-#app {
-  font-family: sans-serif;
-}
-.marcado {
-  text-decoration: line-through;
-  color: #ccc;
-  text-align: center;
 
+#app {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #00d1b2;
 }
-.titulo {
-  height: 100px;
-  background: #00ced1;
-  text-align: center;
-  font-size: 2rem;
-  font-family: sans-serif;
-  font-weight: 600;
-  line-height: 1.199;
-  color: #fff;
-  padding-top: 9%;
-}
-.container {
-  padding-top: 200px;
-  color: #000;
-  display: block;
-  margin: 0 3rem;
-  box-sizing: inherit;
-}
-.tarefas {
-  height: 450px;
-  border: 1px ;
+
+.page-container {
   background-color: #fff;
-  box-sizing: inherit;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  width: 800px; /* Largura do contêiner */
+  max-width: 600px; /* Largura máxima do contêiner */
+  padding: 20px;
 }
-.add {
-  max-width: 500px;
-  margin: 0 auto;
-  background-color: #fff;
-  border-radius: 6px;
-  box-shadow: 0 0.5em 1em -0.125em rgba(10,10,10,.1), 0 0 0 1px rgba(10,10,10,.02);
-  padding: 2.25rem;
-}
-.label {
-  color: #000;
-  display: block;
-  font-size: 1.2rem;
-  font-weight: 700;
-  height: 25px;
   
+.texto{
+  height: 30px;
+  width: 500px;
+  text-align: center;
+  border-radius: 80px;
 }
+.button.is-primary {
+  background-color: #00CED1;;
+  border-color: transparent;
+  color: #fff;
+  border-radius: 90px;
+  line-height: 10px;
+}
+  
 .texto{
   height: 30px;
   width: 500px;
@@ -151,34 +161,57 @@ body {
   line-height: 10px;
 }
 .minhas_tarefas {
-  margin: 0 auto;
-  max-width: 500px;
-  line-height: 1.199;
-  display: block;
-  padding: .3em .75em;
-}
-.t {
-  height: 25px;
-  margin: 15px 0 15px 0;
-  border-bottom: 1px solid;
-  padding: .4em .65em;
-}
-.concluida {
-  float: right;
-}
-.remover {
-  background-color: #00CED1;;
-  border-color: transparent;
-  color: #fff;
-  border-radius: 90px;
-  font-family: sans-serif;
-  float: right;
-
+  list-style-type: none;
+  padding: 0;
 }
 
+.box {
+  margin-bottom: 10px;
+  border: 1px solid #00d1b2;
+}
 
-*, :after, :before {
-    box-sizing: inherit;
+.checkmark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 12px;
+  height: 6px;
+  border-style: solid;
+  border-width: 0 2px 2px 0;
+  border-color: #fff; /* Cor branca para o risco */
+  visibility: hidden;
+}
+
+.is-visible {
+  visibility: visible;
+}
+
+.is-completed {
+  text-decoration: line-through;
+  color: #888;
+}
+.title {
+  color: #00d1b2;
+}
+
+
+.custom-checkbox {
+  content: '';
+  appearance: none;
+  border: 1px solid #00d1b2;
+  border-radius: 4px;
+  width: 16px;
+  height: 16px;
+  outline: none;
+}
+
+.custom-checkbox:checked {
+  background-image: url("data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='17' height='17' viewBox='0 0 10 10'%3E%3Cg class='nc-icon-wrapper' stroke-width='1' fill='%23555555'%3E%3Cpath fill='none' stroke='%23FFFFFF' stroke-linecap='round' stroke-linejoin='round' stroke-miterlimit='10' data-cap='butt' d='M2.83 4.72l1.58 1.58 2.83-2.83'/%3E%3C/g%3E%3C/svg%3E");
+  background-color: #00d1b2; /* Cor de fundo quando marcado */
+  background-position: center;
+  border: none;
+  padding: 1px;
 }
 
 </style>
