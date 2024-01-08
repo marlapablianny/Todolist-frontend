@@ -2,7 +2,14 @@
 
 O Todolist é um aplicativo de lista de tarefas simples desenvolvido com Vue.js, estilizado usando o framework Bulma, e utilizando o Knex.js para interação com o banco de dados.
 
+
 ![Captura de tela de 2024-01-08 19-47-57](https://github.com/marlapablianny/Todolist-frontend/assets/55161178/7c8ce42c-b818-47b4-94ee-471ff0456168)
+
+
+![Captura de tela de 2024-01-08 20-00-30](https://github.com/marlapablianny/Todolist-frontend/assets/55161178/a5646fb1-5da2-4099-a0f5-03fc5cdf139c)
+
+
+
 
 
 ## Project setup
